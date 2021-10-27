@@ -24,12 +24,12 @@ def search_media(name, lang, limit, media_type, year):
         return []
 
     total_pages = search_data['total_pages']
-    total_result = parse_search_data(search_data, lang, limit, media_type, year)
+    total_result = parse_search_data(search_data, lang, limit, media_type, year, name)
 
     while ((len(total_result) < limit) and page < total_pages):
         page += 1
         search_data = search_func(name, lang, year, page)
-        one_page_result = parse_search_data(search_data, lang, limit, media_type, year)
+        one_page_result = parse_search_data(search_data, lang, limit, media_type, year, name)
         total_result.extend(one_page_result)
 
     if (0 < limit) and (limit < len(total_result)):
@@ -38,11 +38,41 @@ def search_media(name, lang, limit, media_type, year):
     return total_result
 
 
-def parse_search_data(search_data, lang, limit, media_type, year):
+def parse_search_data(search_data, lang, limit, media_type, year, name):
     if not search_data.get('results'):
         return []
 
     result = []
+    for item in search_data['results']:
+        data = {}
+        data['id'] = item['id']
+
+        if media_type == 'movie':
+            if item['title'] != name:
+                continue
+        else:
+            if item['name'] != name:
+                continue
+
+        if not _is_translation_available(data['id'], lang, media_type):
+            continue
+
+        data['lang'] = lang
+
+        if year and 'release_date' in item:
+            item_year = searchinc.parse_year(item['release_date'])
+            year_diff = abs(item_year - year)
+
+            if 2 <= year_diff and item_year:
+                continue
+
+        result.append(data)
+
+    if (0 < limit) and (limit == len(result)):
+        return result
+    elif len(result) != 0:
+        result = []
+
     for item in search_data['results']:
         data = {}
         data['id'] = item['id']

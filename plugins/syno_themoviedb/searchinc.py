@@ -1,4 +1,5 @@
 import os
+import codecs
 import json
 import shlex
 import random
@@ -26,7 +27,7 @@ def get_plugin_data_directory(pluginId):
 
 def load_local_cache(cache_path):
     try:
-        with open(cache_path, 'r') as f:
+        with codecs.open(cache_path, 'r', 'utf-8') as f:
             jsonResult = json.loads(f.read())
             return jsonResult
     except:
@@ -78,7 +79,7 @@ def http_get_download(url, filepath):
     if(not result):
         return False
 
-    with open(filepath, 'w') as f:
+    with codecs.open(filepath, 'w', 'utf-8') as f:
         f.write(result)
 
     return True
@@ -130,7 +131,7 @@ def get_guessing_names(title, allowguess):
 
 
 def create_cookie_file():
-    tmpfile = tempfile.NamedTemporaryFile('w+t', prefix='plugin_cookie_', dir='/tmp', delete=False)
+    tmpfile = tempfile.NamedTemporaryFile('w+t', prefix='plugin_cookie_', dir=(os.getenv("TMP") if os.name=="nt" else "/tmp"), delete=False)
     path = tmpfile.name
 
     cookie = http.cookiejar.LWPCookieJar()
