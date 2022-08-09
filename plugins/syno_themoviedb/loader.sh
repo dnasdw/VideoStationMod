@@ -16,6 +16,7 @@ while [ $i -le $# ]; do
 	ARGV="$ARGV $ARG"
 	i=`expr $i + 1`
 done
+#echo "$ARGV">>/volume1/\@appstore/VideoStation/plugins/syno_themoviedb/mod_args.txt
 
 
 eval "/usr/bin/python3 "\

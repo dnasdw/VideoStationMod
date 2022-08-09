@@ -1,0 +1,22 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "search_tv",
+            "type": "python",
+            "request": "launch",
+            "program": "search.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--type", "tvshow_episode",
+                "--lang", "chs",
+                "--input", "{\\\"episode\\\":1,\\\"original_available\\\":2022,\\\"season\\\":1,\\\"title\\\":\\\"金田一少年事件簿\\\"}",
+                "--limit", "1"
+            ]
+        }
+    ]
+}

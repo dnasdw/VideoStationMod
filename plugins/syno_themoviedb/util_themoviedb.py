@@ -66,7 +66,21 @@ def parse_search_data(search_data, lang, limit, media_type, year, name):
             if 2 <= year_diff and item_year:
                 continue
 
+        if year != 0 and 'first_air_date' in item:
+            item_year = searchinc.parse_year(item['first_air_date'])
+            data['year'] = item_year
+
         result.append(data)
+
+    if year != 0 and 0 < limit and limit != len(result):
+        year_result = []
+
+        for item in result:
+            if 'year' in item and year == item['year']:
+                year_result.append(item)
+
+        if limit == len(year_result):
+            return year_result
 
     if (0 < limit) and (limit == len(result)):
         return result
