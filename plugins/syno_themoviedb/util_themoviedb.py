@@ -58,29 +58,19 @@ def parse_search_data(search_data, lang, limit, media_type, year, name):
             continue
 
         data['lang'] = lang
+        if year:
+            item_year = 0
+            if 'release_date' in item:
+                item_year = searchinc.parse_year(item['release_date'])
+            elif 'first_air_date' in item:
+                item_year = searchinc.parse_year(item['first_air_date'])
 
-        if year and 'release_date' in item:
-            item_year = searchinc.parse_year(item['release_date'])
             year_diff = abs(item_year - year)
 
             if 2 <= year_diff and item_year:
                 continue
 
-        if year != 0 and 'first_air_date' in item:
-            item_year = searchinc.parse_year(item['first_air_date'])
-            data['year'] = item_year
-
         result.append(data)
-
-    if year != 0 and 0 < limit and limit != len(result):
-        year_result = []
-
-        for item in result:
-            if 'year' in item and year == item['year']:
-                year_result.append(item)
-
-        if limit == len(year_result):
-            return year_result
 
     if (0 < limit) and (limit == len(result)):
         return result
@@ -95,9 +85,13 @@ def parse_search_data(search_data, lang, limit, media_type, year, name):
             continue
 
         data['lang'] = lang
+        if year:
+            item_year = 0
+            if 'release_date' in item:
+                item_year = searchinc.parse_year(item['release_date'])
+            elif 'first_air_date' in item:
+                item_year = searchinc.parse_year(item['first_air_date'])
 
-        if year and 'release_date' in item:
-            item_year = searchinc.parse_year(item['release_date'])
             year_diff = abs(item_year - year)
 
             if 2 <= year_diff and item_year:
@@ -183,7 +177,7 @@ def _get_tv_search_data(name, lang, year, page):
 
     # example: https://api.themoviedb.org/3/search/tv?api_key=xxxxx&query=superman&language=zh-TW&year=0&page=1
     url = constant.THEMOVIEDB_URL + "search/tv?api_key=" + api_key + '&query=' + \
-        nameEncode + '&language=' + convert_lang + '&year=' + str(year) + '&page=' + str(page)
+        nameEncode + '&language=' + convert_lang + '&first_air_date_year=' + str(year) + '&page=' + str(page)
     return _get_data_from_cache_or_download(url, cache_path, constant.DEFAULT_EXPIRED_TIME)
 
 
